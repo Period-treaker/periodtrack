@@ -1,0 +1,54 @@
+<!DOCTYPE html><html lang="bn">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>নারী স্বাস্থ্য ট্র্যাকার</title>
+  <script defer>
+    let periodDates = JSON.parse(localStorage.getItem('periodDates')) || [];function saveDate() {
+  const dateInput = document.getElementById('periodDate').value;
+  if (dateInput) {
+    periodDates.push(dateInput);
+    localStorage.setItem('periodDates', JSON.stringify(periodDates));
+    showDates();
+  }
+}
+
+function showDates() {
+  const list = document.getElementById('dateList');
+  list.innerHTML = '';
+  periodDates.slice().reverse().forEach(date => {
+    const li = document.createElement('li');
+    li.textContent = 🩸 পিরিয়ড শুরু: ${date};
+    list.appendChild(li);
+  });
+
+  // পরবর্তী পিরিয়ড সম্ভাব্য তারিখ গণনা (ধরা হচ্ছে 28 দিনের চক্র)
+  if (periodDates.length > 0) {
+    const lastDate = new Date(periodDates[periodDates.length - 1]);
+    lastDate.setDate(lastDate.getDate() + 28);
+    document.getElementById('nextDate').textContent = 👉 সম্ভাব্য পরবর্তী পিরিয়ড: ${lastDate.toISOString().slice(0, 10)};
+  }
+}
+
+window.onload = showDates;
+ </script>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-pink-50 text-gray-800 font-sans">
+  <div class="max-w-xl mx-auto p-6 mt-10 bg-white rounded-2xl shadow-xl">
+    <h1 class="text-2xl font-bold text-center text-pink-600 mb-4">নারী স্বাস্থ্য ও পিরিয়ড ট্র্যাকার</h1><div class="mb-4">
+  <label class="block mb-2 font-semibold">আপনার পিরিয়ড শুরুর তারিখ দিন:</label>
+  <input type="date" id="periodDate" class="w-full border border-gray-300 rounded-lg p-2" />
+  <button onclick="saveDate()" class="mt-2 bg-pink-500 text-white py-2 px-4 rounded hover:bg-pink-600">সংরক্ষণ করুন</button>
+</div>
+
+<div class="mb-4">
+  <h2 class="text-lg font-semibold mb-2">আপনার পিরিয়ডের তারিখসমূহ:</h2>
+  <ul id="dateList" class="list-disc pl-5 space-y-1"></ul>
+</div>
+
+<div id="nextDate" class="text-green-600 font-semibold"></div>
+
+  </div>
+</body>
+</html>
